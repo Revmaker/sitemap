@@ -1,0 +1,3 @@
+Sitemap: http://www.gtvintage.com/sitemap.xml
+User-agent:*
+Disallow:

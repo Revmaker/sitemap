@@ -176,7 +176,7 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 		
 		if (isset($_POST['robots']) && $_POST['robots']=='Yes') 
 		{
-			$roboto = fopen($_SERVER['DOCUMENT_ROOT'] . '/robots.txt', 'w+');
+			$roboto = fopen('robots.txt', 'w+');
 
 			if($roboto === false)
 			{
@@ -189,19 +189,19 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 			{
 				echo '<div class="alert alert-danger"><strong>Something is botched up,</strong> failed to fwrite robots.txt to file, terminating.</div>';
 				fclose($roboto);
-				unlink(realpath($_SERVER['DOCUMENT_ROOT'] . '/robots.txt'));	// delete invalid file
+				unlink(realpath('robots.txt'));	// delete invalid file
 				return;
 			}
 
 			fclose($roboto);	// don't forget this			
-			echo '<div class="alert alert-success"><strong>New robots.txt was created to</strong> ' . realpath($_SERVER['DOCUMENT_ROOT'] . '/robots.txt') . '</div>';
+			echo '<div class="alert alert-success"><strong>New robots.txt was created to</strong> ' . realpath('robots.txt') . '</div>';
 		}
 
 		if (!empty($_POST['baseurl'])) 
 		{
 			// make the entry for the base url (www.gtvintage.com or the like)
 			
-			if(($smap = fopen($_SERVER['DOCUMENT_ROOT'].'sitemap.xml', 'w+')) === false)
+			if(($smap = fopen('sitemap.xml', 'w+')) === false)
 			{
 				echo '<div class="alert alert-warning"><strong>Can\'t open sitemap.xml file for writing,</strong> check permissions in ' .  getcwd() . '</div>';
 				return;
@@ -224,7 +224,7 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 			{
 				echo '<div class="alert alert-warning"><strong>Something is wrong,</strong> no records found for query</div>';
 				fclose($smap);
-				unlink(realpath($_SERVER['DOCUMENT_ROOT'] . '/sitemap.xml'));	// delete invalid file
+				unlink(realpath('sitemap.xml'));	// delete invalid file
 				return;
 			}
 			else
@@ -260,11 +260,11 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 			{
 				echo '<div class="alert alert-danger"><strong>Something is botched up,</strong> failed to fwrite URL to file, terminating.</div>';
 				fclose($smap);
-				unlink(realpath($_SERVER['DOCUMENT_ROOT'] . '/sitemap.xml'));	// delete invalid file
+				unlink(realpath('sitemap.xml'));	// delete invalid file
 				return;
 			}
 			
-			echo '<div class="alert alert-success"><strong>New sitemap was created to</strong> ' . realpath($_SERVER['DOCUMENT_ROOT'] . '/sitemap.xml') . '</div>';
+			echo '<div class="alert alert-success"><strong>New sitemap was created to</strong> ' . realpath('sitemap.xml') . '</div>';
 			fclose($smap);
 		}
 	?>
