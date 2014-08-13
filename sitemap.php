@@ -10,14 +10,10 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-
-	<!-- While reading about CSS, I came across the following three meta tags,
-	which I think I should get in the habit of using. --> 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="This generates a sitemap for any of our websites from the database schema newcars. It can generate a new robots.txt.">
     <meta name="author" content="Sam and Sandy">
 
-	<!-- I use the Twitter Bootstrap CSS. I hope this isn't cheating... It just looks so clean! -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
