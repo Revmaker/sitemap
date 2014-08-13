@@ -100,6 +100,10 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 
 
 	<?php
+
+		const MYSQL_DSN = 'mysql:host=localhost;dbname=newcars;charset=utf8';;
+		const USER      = 'revmaker';
+		const PASS      = 'revmaker';
 	
 		/*
 		* This gets used a few times, easier to make a call to it that 
@@ -161,7 +165,7 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 		
 		try 
 		{
-			$db = new PDO('mysql:host=localhost;dbname=newcars;charset=utf8', 'root', 'root');
+			$db = new PDO(MYSQL_DSN, USER, PASS);
 		} 
 		catch(PDOException $ex) 
 		{
