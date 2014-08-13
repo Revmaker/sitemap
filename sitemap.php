@@ -212,7 +212,13 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 			$out_str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			$out_str .= "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
 			$out_str .= GenURLXML($_POST['baseurl'], '1.0');
-			
+
+			// Hard code in ABOUT and PRIVACY POLICY
+			// Change this if reusing code:
+
+			$out_str .= "<url>\n<loc>". $_POST['baseurl'] . "/carro/about</loc>\n<priority>0.3</priority>\n</url>\n\n";
+			$out_str .= "<url>\n<loc>". $_POST['baseurl'] . "/carro/privacy</loc>\n<priority>0.3</priority>\n</url>\n\n";
+
 			fwrite($smap, $out_str);
 			
 			//Get all needed info from database, doing a crazy join will give make, model results
