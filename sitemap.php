@@ -216,8 +216,8 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 			// Hard code in ABOUT and PRIVACY POLICY
 			// Change this if reusing code:
 
-			$out_str .= "<url>\n<loc>". $_POST['baseurl'] . "/carro/about</loc>\n<priority>0.3</priority>\n</url>\n\n";
-			$out_str .= "<url>\n<loc>". $_POST['baseurl'] . "/carro/privacy</loc>\n<priority>0.3</priority>\n</url>\n\n";
+			$out_str .= "<url>\n<loc>". "http://" . $_POST['baseurl'] . "/carro/about</loc>\n<priority>0.3</priority>\n</url>\n\n";
+			$out_str .= "<url>\n<loc>". "http://" . $_POST['baseurl'] . "/carro/privacy</loc>\n<priority>0.3</priority>\n</url>\n\n";
 
 			fwrite($smap, $out_str);
 			
