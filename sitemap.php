@@ -85,7 +85,7 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 	    </div>
 	  </div>
 	  <div class="form-group" id="disallowed">
-	    <label for="disallowed" class="col-sm-2 control-label">Disallowed Directories (leave blank if none)</label>
+	    <label for="disallowed" class="col-sm-2 control-label">Disallowed Directories (separate with commas)</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="col-sm-2" name="disallowed">
 	    </div>
@@ -176,25 +176,33 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 		
 		if (isset($_POST['robots']) && $_POST['robots']=='Yes') 
 		{
-			$roboto = fopen('robots.txt', 'w+');
-
-			if($roboto === false)
+			if(!empty($_POST['disallowed']))
 			{
-				echo '<div class="alert alert-warning"><strong>Can\'t open robots.txt file for writing</strong>, check permissions in ' .  getcwd() . '</div>';
-				return;
+				$roboto = fopen('robots.txt', 'w+');
+
+				if($roboto === false)
+				{
+					echo '<div class="alert alert-warning"><strong>Can\'t open robots.txt file for writing</strong>, check permissions in ' .  getcwd() . '</div>';
+					return;
+				}
+
+
+				if(fwrite($roboto, GenRobots($_POST['disallowed'])) === false)
+				{
+					echo '<div class="alert alert-danger"><strong>Something is botched up,</strong> failed to fwrite robots.txt to file, terminating.</div>';
+					fclose($roboto);
+					unlink(realpath('robots.txt'));	// delete invalid file
+					return;
+				}
+
+				fclose($roboto);	// don't forget this			
+				echo '<div class="alert alert-success"><strong>New robots.txt was created to</strong> ' . realpath('robots.txt') . '</div>';
 			}
-
-
-			if(fwrite($roboto, GenRobots($_POST['disallowed'])) === false)
+			else
 			{
-				echo '<div class="alert alert-danger"><strong>Something is botched up,</strong> failed to fwrite robots.txt to file, terminating.</div>';
-				fclose($roboto);
-				unlink(realpath('robots.txt'));	// delete invalid file
-				return;
+				echo '<div class="alert alert-warning"><strong>Either disallow some directories or don\'t make a robots.txt</strong></div>';
+					return;
 			}
-
-			fclose($roboto);	// don't forget this			
-			echo '<div class="alert alert-success"><strong>New robots.txt was created to</strong> ' . realpath('robots.txt') . '</div>';
 		}
 
 		if (!empty($_POST['baseurl'])) 
