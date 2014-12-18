@@ -64,6 +64,12 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 	    </div>
 	  </div>
 	  <div class="form-group">
+	    <label for="aboutprivacypriority" class="col-sm-2 control-label">About and Privacy Priority</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="col-md-1" id="aboutprivacypriority" name="aboutprivacypriority" value="0.2">
+	    </div>
+	  </div>
+	  <div class="form-group">
 	    <label for="makepriority" class="col-sm-2 control-label">Make Priority</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="col-md-1" id="makepriority" name="makepriority" value="0.8">
@@ -72,7 +78,32 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 	  <div class="form-group">
 	    <label for="modelpriority" class="col-sm-2 control-label">Model Priority</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="col-md-1" id="modelpriority" name="modelpriority" value="0.5">
+	      <input type="text" class="col-md-1" id="modelpriority" name="modelpriority" value="0.6">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="dealerpriority" class="col-sm-2 control-label">Dealer Priority</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="col-md-1" id="dealerpriority" name="dealerpriority" value="0.4">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="dealermakepriority" class="col-sm-2 control-label">Dealer Make Priority</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="col-md-1" id="dealermakepriority" name="dealermakepriority" value="0.4">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="individualdealerpriority" class="col-sm-2 control-label">Individual Dealer Priority</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="col-md-1" id="individualdealerpriority" name="individualdealerpriority" value="0.3">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="dealernameorid" class="col-sm-2 control-label">Dealer URL from ID or Name?</label>
+	    <div class="col-sm-10">
+	      <input type="radio" value="id" checked="Yes" id="dealernameorid" name="dealernameorid"> ID <i>  (ex: www.gtvintage.com/concessionarias/4576)</i><br>
+	      <input type="radio" value="name" id="dealernameorid" name="dealernameorid"> Name <i>  (ex: www.gtvintage.com/concessionarias/Audi-Center-Belo-Horizonte)</i>
 	    </div>
 	  </div>	  
 	  <div class="form-group">
@@ -213,11 +244,12 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 			$out_str .= "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
 			$out_str .= GenURLXML($_POST['baseurl'], '1.0');
 
+			
 			// Hard code in ABOUT and PRIVACY POLICY
 			// Change this if reusing code:
 
-			$out_str .= "<url>\n<loc>". "http://" . $_POST['baseurl'] . "/carro/about</loc>\n<priority>0.3</priority>\n</url>\n\n";
-			$out_str .= "<url>\n<loc>". "http://" . $_POST['baseurl'] . "/carro/privacy</loc>\n<priority>0.3</priority>\n</url>\n\n";
+			$out_str .= GenURLXML($_POST['baseurl'], $_POST['aboutprivacypriority'], 'carro', 'about');
+			$out_str .= GenURLXML($_POST['baseurl'], $_POST['aboutprivacypriority'], 'carro', 'privacy');
 
 			fwrite($smap, $out_str);
 			
@@ -228,13 +260,13 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 
 			if(($rec_cnt = count($results_array)) <=0)
 			{
-				echo '<div class="alert alert-warning"><strong>Something is wrong,</strong> no records found for query</div>';
+				echo '<div class="alert alert-warning"><strong>Something is wrong,</strong> no records found for make/model query</div>';
 				fclose($smap);
 				unlink(realpath('sitemap.xml'));	// delete invalid file
 				return;
 			}
 			else
-				echo 'Processed ' . $rec_cnt . ' Records<br><br>';
+				echo '<div class="alert alert-info">Processed ' . $rec_cnt . ' Make/Model Records</div><br>';
 
 			// could also limit count here if too many results...
 
@@ -260,6 +292,55 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 				$ids[] = $id;	// ever record gets added here
 			}
 			
+			// added 11/6
+			// DEALERS
+
+			// the main dealers directory
+			$out_str .= GenURLXML($_POST['baseurl'], $_POST['dealerpriority'], 'concessionarias');
+
+			//get all the dealers by make
+			$sql = $db->query('SELECT fab_id, fab_bez, hd_id, hd_name FROM br_fabrikate, br_haendler WHERE fab_status=0 AND hd_status=0 AND fab_id=hd_fabrikat ORDER BY fab_id;'); 
+			$results_array = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+			if(($rec_cnt = count($results_array)) <=0)
+			{
+				echo '<div class="alert alert-warning"><strong>Something is wrong,</strong> no records found for dealers query</div>';
+				fclose($smap);
+				unlink(realpath('sitemap.xml'));	// delete invalid file
+				return;
+			}
+			else
+				echo '<div class="alert alert-info">Processed ' . $rec_cnt . ' Dealer Records</div><br>';
+
+			$ids = array();
+
+			foreach($results_array as $row) 
+			{	
+				//give convenient names and make URL-encoded
+
+				$id     = $row['fab_id'];
+				$fab    = mb_strtolower(FixChars($row['fab_bez']), 'UTF-8');
+				$dlr_id = FixChars($row['hd_id']);
+				$dlr_nm = mb_strtolower(FixChars($row['hd_name']), 'UTF-8');
+
+				// if we have not seen this make before, do just the make URL style
+				
+				if (!in_array($id, $ids)) 
+					$out_str .= GenURLXML($_POST['baseurl'], $_POST['dealermakepriority'], 'concessionarias', $fab);
+				
+				if ($_POST['dealernameorid'] === 'id')
+				{
+					$out_str .= GenURLXML($_POST['baseurl'], $_POST['individualdealerpriority'], 'concessionarias', $dlr_id);
+				}
+				elseif ($_POST['dealernameorid'] === 'name')
+				{
+					$out_str .= GenURLXML($_POST['baseurl'], $_POST['individualdealerpriority'], 'concessionarias', $fab . '-' . $dlr_nm);
+				}
+
+				$ids[] = $id;	// ever record gets added here
+			}
+			
+
 			$out_str .="</urlset>";
 			
 			if(fwrite($smap, $out_str) === false)
