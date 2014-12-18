@@ -49,10 +49,10 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 
 
     <div class="jumbotron">
-    <h1>Sitemap Generator 1.1</h1>
- 	<p>New fancy look, <em>same great <s>taste</s> functionality!</em></p>
-    <p>This site generates a sitemap.xml file for submitting to search engines.</p>
- 	<p>It can also generate a new robots.txt file.</p>
+	    <h1>Sitemap Generator 1.1</h1>
+	 	<p>New fancy look, <em>same great <s>taste</s> functionality!</em></p>
+	    <p>This site generates a sitemap.xml file for submitting to search engines.</p>
+	 	<p>It can also generate a new robots.txt file.</p>
     </div>
 
 
@@ -131,21 +131,14 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 
 		function GenRobots($disallowed)
 		{
-			$robot_string = "Sitemap: http://{$_POST['baseurl']}/sitemap.xml\nUser-agent:*";
+			$robot_string = "Sitemap: http://{$_POST['baseurl']}/sitemap.xml\n\nUser-agent:*";
 
-			if (empty($_POST['disallowed'])) 
+			$disarray = explode(', ', $disallowed);
+			foreach ($disarray as $rob_key => $rob_value) 
 			{
-				$robot_string .= "\nDisallow:";
-			}
-			else
-			{
-				$disarray = explode(', ', $_POST['disallowed']);
-				foreach ($disarray as $rob_key => $rob_value) 
-				{
-					$robot_string .= "\nDisallow:/{$rob_value}/";
-				}				
-			}
-
+				$robot_string .= "\nDisallow: /{$rob_value}/";
+			}				
+	
 			return $robot_string;
 		}
 	
@@ -186,7 +179,6 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 					return;
 				}
 
-
 				if(fwrite($roboto, GenRobots($_POST['disallowed'])) === false)
 				{
 					echo '<div class="alert alert-danger"><strong>Something is botched up,</strong> failed to fwrite robots.txt to file, terminating.</div>';
@@ -200,7 +192,7 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 			}
 			else
 			{
-				echo '<div class="alert alert-warning"><strong>Either disallow some directories or don\'t make a robots.txt</strong></div>';
+				echo '<div class="alert alert-warning"><strong>Either disallow some directories or don\'t make a robots.txt (there\'s no point)</strong></div>';
 					return;
 			}
 		}
