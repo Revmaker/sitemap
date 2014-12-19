@@ -189,7 +189,7 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 		
 		try 
 		{
-			$db = new PDO(MYSQL_DSN, USER, PASS);
+			$db = new PDO(MYSQL_DSN, USERNAME, PASS);
 		} 
 		catch(PDOException $ex) 
 		{
