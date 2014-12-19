@@ -132,9 +132,10 @@ TO-DO: add "auto-submit to google" option (first need to submite manually once).
 
 	<?php
 
-		const MYSQL_DSN = 'mysql:host=localhost;dbname=newcars;charset=utf8';;
-		const USER      = 'revmaker';
-		const PASS      = 'revmaker';
+		const MYSQL_DSN = 'mysql:host=carrosaopaulo.cx4ynjesphwe.sa-east-1.rds.amazonaws.com;dbname=newcars;charset=utf8';
+		const USERNAME  = 'cron-user';
+		const PASS      = 'cronometer';
+
 	
 		/*
 		* This gets used a few times, easier to make a call to it that 
